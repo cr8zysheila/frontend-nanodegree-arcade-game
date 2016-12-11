@@ -1,11 +1,14 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(posX, posY, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = posX;
+    this.y = posY;
+    this.speed = speed;
 };
 
 // Update the enemy's position, required method for game
@@ -14,6 +17,9 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = this.x + this.speed * dt;
+    if(this.x > canvas.width)
+        this.x = 0;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -24,16 +30,61 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+var Player = function(posX, posY) {
+    this.sprite = 'images/char-boy.png';
+    this.x = posX;
+    this.y = posY;
+};
+
+Player.prototype.update = function() {
+
+};
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+};
+
+Player.prototype.handleInput = function(keyname) { 
+    if(keyname === 'left')
+    {
+        if(this.x - 101 >= 0)
+            this.x = this.x - 101;
+    }
+    else if(keyname === 'right')
+    {
+        if(this.x + 101 < canvas.width)
+            this.x = this.x + 101;
+    }
+    else if(keyname === 'up')
+    {
+        if(this.y - 70 >= 0)
+            this.y = this.y - 83;
+    }
+    else if(keyname === 'down')
+    {
+        if(this.y + 83 < 83 * 5)
+            this.y = this.y + 83;
+    }
+
+}
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+// zz: there's an offset of 70 on y axis, so that the charater part of the image can be 
+// placed on the middle of the blocks
+var allEnemies = [];
+allEnemies.push(new Enemy(0, 70, 100));
+allEnemies.push(new Enemy(0, 70 + 83, 150));
+allEnemies.push(new Enemy(0, 70 + 83 * 2, 180));
 
+var player = new Player(101*2, 70 + 83 * 4);
 
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
+
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -44,3 +95,4 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+

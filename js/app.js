@@ -8,6 +8,8 @@ var Enemy = function(posX, posY, speed) {
     this.sprite = 'images/enemy-bug.png';
     this.x = posX;
     this.y = posY;
+    this.blockX = this.computeBlockX();
+    this.blockY = this.computeBlockY();
     this.speed = speed;
 };
 
@@ -20,12 +22,23 @@ Enemy.prototype.update = function(dt) {
     this.x = this.x + this.speed * dt;
     if(this.x > canvas.width)
         this.x = 0;
+
+    this.blockX = this.computeBlockX();
+    this.blockY = this.computeBlockY();
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+Enemy.prototype.computeBlockX = function() {
+    return Math.floor(this.x / 101);
+}
+
+Enemy.prototype.computeBlockY = function() {
+    return Math.floor( (this.y + 105 -70) / 83 );
+}
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -34,15 +47,36 @@ var Player = function(posX, posY) {
     this.sprite = 'images/char-boy.png';
     this.x = posX;
     this.y = posY;
+    this.blockX = this.computeBlockX();
+    this.blockY = this.computeBlockY();
 };
 
 Player.prototype.update = function() {
+     if(checkCollisions())
+    {
+        player.resetXY(101*2, 70 + 83 * 4);
+    }
 
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
 };
+
+Player.prototype.computeBlockX = function() {
+    return Math.floor(this.x / 101);
+}
+
+Player.prototype.computeBlockY = function() {
+    return Math.floor( (this.y + 105 -70) / 83 );
+}
+
+Player.prototype.resetXY = function(x, y) {
+    this.x = x;
+    this.y = y;
+    this.blockX = this.computeBlockX();
+    this.blockY = this.computeBlockY();
+}
 
 Player.prototype.handleInput = function(keyname) { 
     if(keyname === 'left')
@@ -66,7 +100,22 @@ Player.prototype.handleInput = function(keyname) {
             this.y = this.y + 83;
     }
 
+    this.blockX = this.computeBlockX();
+    this.blockY = this.computeBlockY();
+
 }
+
+function checkCollisions() {
+        var collision = false;
+        allEnemies.forEach( function(enemy){
+            if(enemy.blockX === player.blockX && enemy.blockY === player.blockY)
+            {
+                collision = true;
+            }
+        });
+
+        return collision;
+    }
 
 
 // Now instantiate your objects.

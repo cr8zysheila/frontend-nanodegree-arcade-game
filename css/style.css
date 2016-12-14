@@ -1,3 +1,16 @@
 body {
     text-align: center;
 }
+
+.scores{
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.win {
+	color: green;
+}
+
+.lose {
+	color: red;
+}

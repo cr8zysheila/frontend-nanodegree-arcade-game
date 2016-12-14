@@ -49,18 +49,43 @@ var Player = function(posX, posY) {
     this.y = posY;
     this.blockX = this.computeBlockX();
     this.blockY = this.computeBlockY();
+    this.wins = 0;
+    this.loses = 0;
 };
 
 Player.prototype.update = function() {
+    /* Have to draw the player first then reset the player
      if(checkCollisions())
     {
         player.resetXY(101*2, 70 + 83 * 4);
+        player.loses++;
+        document.getElementById("num_loses").innerHTML = player.loses;
     }
+    else if(player.blockY === 0)
+    {
+        player.resetXY(101*2, 70 + 83 * 4);
+        player.wins++;
+        document.getElementById("num_wins").innerHTML = player.wins;
+    }
+    */
 
 };
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+    if(checkCollisions())
+    {
+        player.resetXY(101*2, 70 + 83 * 4);
+        player.loses++;
+        document.getElementById("num_loses").innerHTML = player.loses;
+    }
+    else if(player.blockY === 0)
+    {
+        player.resetXY(101*2, 70 + 83 * 4);
+        player.wins++;
+        document.getElementById("num_wins").innerHTML = player.wins;
+    }
 };
 
 Player.prototype.computeBlockX = function() {
@@ -124,9 +149,9 @@ function checkCollisions() {
 // zz: there's an offset of 70 on y axis, so that the charater part of the image can be 
 // placed on the middle of the blocks
 var allEnemies = [];
-allEnemies.push(new Enemy(0, 70, 100));
-allEnemies.push(new Enemy(0, 70 + 83, 150));
-allEnemies.push(new Enemy(0, 70 + 83 * 2, 180));
+allEnemies.push(new Enemy(0, 70, 80));
+allEnemies.push(new Enemy(0, 70 + 83, 120));
+allEnemies.push(new Enemy(0, 70 + 83 * 2, 150));
 
 var player = new Player(101*2, 70 + 83 * 4);
 
